@@ -1,4 +1,4 @@
-module github.com/yurikaza/chain-storage-distributed-file-system
+module github.com/yurikaza/Chain-storage-distributed-file-system
 
 go 1.19
 

@@ -1,0 +1,39 @@
+# This snap will build kubo from source.
+name: chain-storage-core
+summary: global, versioned, peer-to-peer blockcahin # 79 char long summary
+description: a
+# fetch the version number in the `ipfs` part rather than hardcode it here
+# see: https://snapcraft.io/docs/using-external-metadata#heading--scriptlet
+adopt-info: chain-storage-core
+base: core18
+grade: stable
+confinement: strict
+
+apps:
+  ipfs:
+    command: chain-storage-core
+    # the home plug is included so the user can `ipfs add` files from their home dir without a permission error.
+    plugs: [home, network, network-bind, removable-media]
+    environment:
+      # Snaps versions are isolated by default. This keeps the same ipfs repo across upgrades.
+      IPFS_PATH: "$SNAP_USER_COMMON"
+
+parts:
+  ipfs:
+    source: "."
+    source-tag: master
+    plugin: go
+    # keep me up to date with the go version that kubo expects to be built with.
+    go-channel: 1.19/stable
+    go-importpath: github.com/yurikaza/Chain-Storage-BlockChain
+    build-packages:
+      - build-essential
+
+    # use `make` to build and set the snap version from `ipfs version` output
+    override-build: |
+      export GOPATH=$SNAPCRAFT_PART_BUILD/go
+      make install
+      cp $SNAPCRAFT_PART_BUILD/go/bin/ipfs $SNAPCRAFT_PART_INSTALL
+      export CHAIN_STORAGE_CORE_VERSION=$($SNAPCRAFT_PART_BUILD/go/bin/chain-storage-core version --commit | cut -c 14-)
+      echo "found version $CHAIN_STORAGE_CORE_VERSION"
+      snapcraftctl set-version $CHAIN_STORAGE_CORE_VERSION

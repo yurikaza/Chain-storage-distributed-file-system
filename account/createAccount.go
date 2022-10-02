@@ -1,4 +1,4 @@
-package main
+package account
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	p2p.connectNode()
+	account.connectNode()
 	node, err := libp2p.New(
 		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/46269"),
 		libp2p.Ping(false),

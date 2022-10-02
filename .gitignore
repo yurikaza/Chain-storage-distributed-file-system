@@ -21,6 +21,8 @@ bin/tmp
 bin/gocovmerge
 bin/cover
 
+libp2p-node
+*/libp2p-node
 
 #vendor
 .tarball

@@ -1,4 +1,4 @@
-package account
+package main
 
 import (
 	"fmt"
@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	account.connectNode()
 	node, err := libp2p.New(
 		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/46269"),
 		libp2p.Ping(false),
@@ -26,7 +25,7 @@ func main() {
 	// print the node's listening addresses
 	fmt.Println("Listen addresses:", node.Addrs())
 
-    	// print the node's PeerInfo in multiaddr format
+	// print the node's PeerInfo in multiaddr format
 	peerInfo := peerstore.AddrInfo{
 		ID:    node.ID(),
 		Addrs: node.Addrs(),
@@ -34,32 +33,32 @@ func main() {
 	addrs, err := peerstore.AddrInfoToP2pAddrs(&peerInfo)
 	fmt.Println("libp2p node address:", addrs[0])
 	if err != nil {
-	    fmt.Println("libp2p node address: Not Found!!!")
-	    return	
+		fmt.Println("libp2p node address: Not Found!!!")
+		return
 	}
 
-    go func ()  { 
-        // shut the node down
-        if err := node.Close(); err != nil {
-            panic(err)
-        }
-    }()
+	go func() {
+		// shut the node down
+		if err := node.Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	// Connect to Local Database
-	db, err := leveldb.OpenFile("cahin-storage/db", nil)
+	db, err := leveldb.OpenFile("cahin-storage/db/user", nil)
 
 	if err != nil {
 		fmt.Println("LevelDB Not Found")
-		return 
+		return
 	} else {
-	    fmt.Println("DB connected")
+		fmt.Println("DB connected")
 	}
 
 	err = db.Put([]byte("userID"), []byte(node.ID()), nil)
 	if err != nil {
 		fmt.Println("Node.ID() not found")
-		return  
-	} 
+		return
+	}
 
-	defer db.Close()	
+	defer db.Close()
 }

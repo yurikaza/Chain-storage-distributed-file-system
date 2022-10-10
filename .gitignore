@@ -1,7 +1,3 @@
-# ipfs can generate profiling dump files
-*.cpuprof
-*.memprof
-
 *.swp
 *.out
 *.coverprofile
@@ -26,7 +22,6 @@ vendor
 
 #vendor
 .tarball
-docs/examples/go-ipfs-as-a-library/example-folder/Qm*
 
 # ignore build output from snapcraft
 /parts
